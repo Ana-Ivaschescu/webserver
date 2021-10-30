@@ -1,6 +1,7 @@
 package com.code.httpserver.config;
 
 import com.code.httpserver.util.Json;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.FileNotFoundException;
@@ -23,19 +24,40 @@ public class ConfigurationManager {
     }
 
     /* used for loading a config file by the path provider*/
-    public void loadConfigurationFile(String filePath) throws IOException {
-        FileReader fileReader = new FileReader(filePath);
+    public void loadConfigurationFile(String filePath) {
+        FileReader fileReader = null;
+        try {
+            fileReader = new FileReader(filePath);
+        } catch (FileNotFoundException e) {
+            throw new HttpConfigurationException(e);
+        }
         StringBuffer sb = new StringBuffer();
         int i;
-        while((i = fileReader.read()) != -1){
-            sb.append((char)i);
+        try{
+            while((i = fileReader.read()) != -1) {
+                sb.append((char) i);
+            }
+        }catch (IOException e){
+            throw new HttpConfigurationException(e);
         }
-        JsonNode conf = Json.parse(sb.toString());
-        myCurrentConfiguration = Json.fromJson(conf, Configuration.class);
+        JsonNode conf = null;
+        try {
+            conf = Json.parse(sb.toString());
+        } catch (IOException e) {
+            throw new HttpConfigurationException("Error parsing the Configuration File", e);
+        }
+        try {
+            myCurrentConfiguration = Json.fromJson(conf, Configuration.class);
+        } catch (JsonProcessingException e) {
+            throw new HttpConfigurationException("Error parsing the Configuration File, internal", e);
+        }
     }
 
     /* returns the current loaded config*/
-    public void getCurrentConfiguration(){
-
+    public Configuration getCurrentConfiguration(){
+        if(myCurrentConfiguration == null){
+            throw new HttpConfigurationException("No Current Configuration Set");
+        }
+        return myCurrentConfiguration;
     }
 }

@@ -1,5 +1,12 @@
 package com.code.httpserver.config;
 
+import com.code.httpserver.util.Json;
+import com.fasterxml.jackson.databind.JsonNode;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
 /* singleton class*/
 public class ConfigurationManager {
     private static ConfigurationManager myConfigurationManager;
@@ -16,8 +23,15 @@ public class ConfigurationManager {
     }
 
     /* used for loading a config file by the path provider*/
-    public void loadConfigurationFile(String filePath){
-
+    public void loadConfigurationFile(String filePath) throws IOException {
+        FileReader fileReader = new FileReader(filePath);
+        StringBuffer sb = new StringBuffer();
+        int i;
+        while((i = fileReader.read()) != -1){
+            sb.append((char)i);
+        }
+        JsonNode conf = Json.parse(sb.toString());
+        myCurrentConfiguration = Json.fromJson(conf, Configuration.class);
     }
 
     /* returns the current loaded config*/

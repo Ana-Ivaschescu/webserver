@@ -26,7 +26,6 @@ class HttpParserTest {
             HttpRequest request = httpParser.parseHttpRequest(
                     generateBadTestCaseMethod1()
             );
-            fail();
         } catch (HttpParsingException e) {
             e.printStackTrace();
             assertEquals(e.getErrorCode(), HttpStatusCode.SERVER_ERROR_501_NOT_IMPLEMENTED);

@@ -21,12 +21,144 @@ class HttpParserTest {
     }
 
     @Test
+    void parseHttpRequestBadMethod1() {
+        try {
+            HttpRequest request = httpParser.parseHttpRequest(
+                    generateBadTestCaseMethod1()
+            );
+            fail();
+        } catch (HttpParsingException e) {
+            e.printStackTrace();
+            assertEquals(e.getErrorCode(), HttpStatusCode.SERVER_ERROR_501_NOT_IMPLEMENTED);
+        }
+    }
+
+    @Test
+    void parseHttpRequestBadMethod2() {
+        try {
+            HttpRequest request = httpParser.parseHttpRequest(
+                    generateBadTestCaseMethod2()
+            );
+            fail();
+        } catch (HttpParsingException e) {
+            assertEquals(e.getErrorCode(), HttpStatusCode.SERVER_ERROR_501_NOT_IMPLEMENTED);
+        }
+    }
+
+    @Test
+    void parseHttpRequestInvNumItems() {
+        try {
+            HttpRequest request = httpParser.parseHttpRequest(
+                    generateBadTestCaseRequestLineInvNumItems()
+            );
+            fail();
+        } catch (HttpParsingException e) {
+            assertEquals(e.getErrorCode(), HttpStatusCode.CLIENT_ERROR_400_BAD_REQUEST);
+        }
+    }
+
+    @Test
+    void parseHttpRequestNoLF() {
+        try {
+            HttpRequest request = httpParser.parseHttpRequest(
+                    generateBadTestCaseRequestLineNoLF()
+            );
+            fail();
+        } catch (HttpParsingException e) {
+            assertEquals(e.getErrorCode(), HttpStatusCode.CLIENT_ERROR_400_BAD_REQUEST);
+        }
+    }
+
+    @Test
+    void parseHttpEmptyRequest() {
+        try {
+            HttpRequest request = httpParser.parseHttpRequest(
+                    generateBadTestCaseEmptyRequestLine()
+            );
+            fail();
+        } catch (HttpParsingException e) {
+            assertEquals(e.getErrorCode(), HttpStatusCode.CLIENT_ERROR_400_BAD_REQUEST);
+        }
+    }
+
+    @Test
     void parseHttpRequest() {
-        HttpRequest request = httpParser.parseHttpRequest(
-                generateValidGETTestCase()
+        HttpRequest request = null;
+        try {
+            request = httpParser.parseHttpRequest(
+                    generateValidGETTestCase()
+            );
+        } catch (HttpParsingException e) {
+            fail(e);
+        }
+
+        assertNotNull(request);
+        assertEquals(request.getMethod(), HttpMethod.GET);
+        assertEquals(request.getRequestTarget(), "/");
+    }
+
+    private InputStream generateBadTestCaseMethod1(){
+        String rawData = "GET / HTTP/1.1\r\n" +
+                "Accept-Language: en-GB,en-US;q=0.9,en;q=0.8,ro;q=0.7,de;q=0.6,hu;q=0.5\r\n" +
+                "\r\n";
+
+        InputStream inputStream = new ByteArrayInputStream(
+                rawData.getBytes(StandardCharsets.US_ASCII)
         );
 
-        assertEquals(request.getMethod(), HttpMethod.GET);
+        return inputStream;
+    }
+
+    private InputStream generateBadTestCaseMethod2(){
+        String rawData = "GETTTT / HTTP/1.1\r\n" +
+                "Host: localhost:1234\r\n" +
+                "Accept-Language: en-GB,en-US;q=0.9,en;q=0.8,ro;q=0.7,de;q=0.6,hu;q=0.5\r\n" +
+                "\r\n";
+
+        InputStream inputStream = new ByteArrayInputStream(
+                rawData.getBytes(StandardCharsets.US_ASCII)
+        );
+
+        return inputStream;
+    }
+
+    private InputStream generateBadTestCaseRequestLineInvNumItems(){
+        String rawData = "GET / AAA HTTP/1.1\r\n" +
+                "Host: localhost:1234\r\n" +
+                "Accept-Language: en-GB,en-US;q=0.9,en;q=0.8,ro;q=0.7,de;q=0.6,hu;q=0.5\r\n" +
+                "\r\n";
+
+        InputStream inputStream = new ByteArrayInputStream(
+                rawData.getBytes(StandardCharsets.US_ASCII)
+        );
+
+        return inputStream;
+    }
+
+    private InputStream generateBadTestCaseRequestLineNoLF(){
+        String rawData = "GET / HTTP/1.1\r" +
+                "Host: localhost:1234\r\n" +
+                "Accept-Language: en-GB,en-US;q=0.9,en;q=0.8,ro;q=0.7,de;q=0.6,hu;q=0.5\r\n" +
+                "\r\n";
+
+        InputStream inputStream = new ByteArrayInputStream(
+                rawData.getBytes(StandardCharsets.US_ASCII)
+        );
+
+        return inputStream;
+    }
+
+    private InputStream generateBadTestCaseEmptyRequestLine(){
+        String rawData = "\r\n" +
+                "Host: localhost:1234\r\n" +
+                "Accept-Language: en-GB,en-US;q=0.9,en;q=0.8,ro;q=0.7,de;q=0.6,hu;q=0.5\r\n" +
+                "\r\n";
+
+        InputStream inputStream = new ByteArrayInputStream(
+                rawData.getBytes(StandardCharsets.US_ASCII)
+        );
+
+        return inputStream;
     }
 
     private InputStream generateValidGETTestCase(){

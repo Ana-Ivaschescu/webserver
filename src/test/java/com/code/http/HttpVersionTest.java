@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class HttpVersionTest {
+class HttpVersionTest {
 
     @Test
     void getBestCompatibleVersionExactMatch(){
@@ -16,7 +16,7 @@ public class HttpVersionTest {
         }
 
         assertNotNull(version);
-        assertEquals(version, HttpVersion.HTTP_1_1);
+        assertEquals( HttpVersion.HTTP_1_1, version);
 
     }
 
@@ -38,7 +38,7 @@ public class HttpVersionTest {
         try {
             version = HttpVersion.getBestCompatibleVersion("HTTP/1.2");
             assertNotNull(version);
-            assertEquals(version, HttpVersion.HTTP_1_1);
+            assertEquals( HttpVersion.HTTP_1_1, version);
 
         } catch (BadHttpParsingException e) {
             fail();

@@ -1,5 +1,5 @@
 package com.code.http;
 
-public abstract class HttpMessage {
+public interface HttpMessage {
 
 }

@@ -1,16 +1,10 @@
 package com.code.http;
 
-public class HttpRequest extends HttpMessage{
+public class HttpRequest implements HttpMessage{
 
     private HttpMethod method;
     private String requestTarget;
-
-
-
     private String originalHttpVersion;
-
-
-
     private HttpVersion bestCompatibleVersion;
 
     HttpRequest(){
@@ -22,9 +16,9 @@ public class HttpRequest extends HttpMessage{
     }
 
     void setMethod(String methodName) throws HttpParsingException{
-        for(HttpMethod method : HttpMethod.values()){
-            if(methodName.equals(method.name())){
-                this.method = method;
+        for(HttpMethod method1 : HttpMethod.values()){
+            if(methodName.equals(method1.name())){
+                this.method = method1;
                 return;
             }
         }

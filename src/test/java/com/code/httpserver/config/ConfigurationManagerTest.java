@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ConfigurationManagerTest {
 
     @Test
-    public void loadConfigurationFileTest() {
+     void loadConfigurationFileTest() {
 
         Assertions.assertThrows(HttpConfigurationException.class, () -> {
             String filePath = "de_negasit";
@@ -21,7 +21,7 @@ class ConfigurationManagerTest {
     }
 
     @Test
-    public void getCurrentConfigTest(){
+    void getCurrentConfigTest(){
         HttpConfigurationException exception = Assertions.assertThrows(HttpConfigurationException.class, () -> {
             final ConfigurationManager configManager = ConfigurationManager.getInstance();
             //final Field field = configManager.getClass().getDeclaredField("myCurrentConfiguration");

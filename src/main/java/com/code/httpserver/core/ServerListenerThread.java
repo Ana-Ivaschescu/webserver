@@ -4,8 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -22,7 +20,8 @@ public class ServerListenerThread extends Thread{
    }
 
     /*listening to a certain port and accept any connections that arise*/
-   public void run(){
+   @Override
+    public void run(){
        try {
            while(serverSocket.isBound() && !serverSocket.isClosed()) {
                Socket socket = serverSocket.accept();

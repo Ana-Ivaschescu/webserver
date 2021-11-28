@@ -31,15 +31,17 @@ public class ConfigurationManager {
         } catch (FileNotFoundException e) {
             throw new HttpConfigurationException(e);
         }
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int i;
         try{
             while((i = fileReader.read()) != -1) {
                 sb.append((char) i);
             }
+            fileReader.close();
         }catch (IOException e){
             throw new HttpConfigurationException(e);
         }
+
         JsonNode conf = null;
         try {
             conf = Json.parse(sb.toString());

@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ConfigurationTest {
 
     @Test
-    public void webroot_getValue() throws NoSuchFieldException, IllegalAccessException{
+    void webroot_getValue() throws NoSuchFieldException, IllegalAccessException{
         final Configuration config = new Configuration();
         final Field field = config.getClass().getDeclaredField("webroot");
         field.setAccessible(true);
@@ -17,11 +17,11 @@ class ConfigurationTest {
 
         final String result = config.getWebroot();
 
-        assertEquals(result, "testWebroot");
+        assertEquals( "testWebroot", result);
     }
 
     @Test
-    public void port_getValue() throws NoSuchFieldException, IllegalAccessException{
+    void port_getValue() throws NoSuchFieldException, IllegalAccessException{
         final Configuration config = new Configuration();
         final Field field = config.getClass().getDeclaredField("port");
         field.setAccessible(true);
@@ -29,24 +29,24 @@ class ConfigurationTest {
 
         final int result = config.getPort();
 
-        assertEquals(result, 1234);
+        assertEquals(1234, result);
     }
 
     @Test
-    public void webroot_setValue() throws NoSuchFieldException, IllegalAccessException{
+    void webroot_setValue() throws NoSuchFieldException, IllegalAccessException{
         final Configuration config = new Configuration();
         config.setWebroot("testWebroot");
         final Field field = config.getClass().getDeclaredField("webroot");
         field.setAccessible(true);
-        assertEquals(field.get(config), "testWebroot");
+        assertEquals("testWebroot", field.get(config));
     }
 
     @Test
-    public void port_setValue() throws NoSuchFieldException, IllegalAccessException{
+    void port_setValue() throws NoSuchFieldException, IllegalAccessException{
         final Configuration config = new Configuration();
         config.setPort(1234);
         final Field field = config.getClass().getDeclaredField("port");
         field.setAccessible(true);
-        assertEquals(field.get(config), 1234);
+        assertEquals( 1234, field.get(config));
     }
 }

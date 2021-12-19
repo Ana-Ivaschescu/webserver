@@ -1,5 +1,6 @@
 package com.code.httpserver.core;
 
+import com.code.http.Code;
 import com.code.http.HttpParser;
 import com.code.http.HttpParsingException;
 import com.code.http.HttpRequest;
@@ -22,6 +23,8 @@ public class HttpConnectionWorkerThread extends Thread{
 
     @Override
     public void run() {
+        Code code = Code.getInstance();
+
         InputStream inputStream = null;
         OutputStream outputStream = null;
         try {
@@ -29,8 +32,7 @@ public class HttpConnectionWorkerThread extends Thread{
             HttpParser parser = new HttpParser();
             HttpRequest request = parser.parseHttpRequest(inputStream);
 
-            System.out.println(request.getRequestTarget());
-            System.out.println(request.getMethod());
+            //System.out.println(request.getRequestTarget());
 
             outputStream = socket.getOutputStream();
 
@@ -44,6 +46,7 @@ public class HttpConnectionWorkerThread extends Thread{
                                     result +
                                     CRLF + CRLF;
 
+                    code.setCode(501);
                     outputStream.write(response.getBytes());
             } else {
                 if(request.getRequestTarget() == null || request.getRequestTarget().isEmpty() || request.getRequestTarget().equals("/")){
@@ -56,6 +59,7 @@ public class HttpConnectionWorkerThread extends Thread{
                             html +
                             CRLF + CRLF;
 
+                    code.setCode(200);
                     outputStream.write(response.getBytes());
                 }
                 else{
@@ -80,8 +84,8 @@ public class HttpConnectionWorkerThread extends Thread{
                                             result +
                                             CRLF + CRLF;
 
-                            outputStream.write(response.getBytes());
-
+                           code.setCode(200);
+                           outputStream.write(response.getBytes());
                         }catch(Exception e){
                             System.out.println(e);
                         }
@@ -94,13 +98,12 @@ public class HttpConnectionWorkerThread extends Thread{
                                         CRLF +
                                         result +
                                         CRLF + CRLF;
-
+                        code.setCode(404);
                         outputStream.write(response.getBytes());
                     }
 
                 }
             }
-
             LOGGER.info("Connection Processing Finished");
         } catch (IOException | HttpParsingException e) {
             LOGGER.error("Problem with communication", e);
